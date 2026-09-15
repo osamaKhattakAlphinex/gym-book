@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Dumbbell, MapPin, Phone, Mail, Clock3 } from "lucide-react";
 import { MARKETING_NAV } from "@/lib/marketing/routes";
-import { GYM, PROGRAMS } from "@/lib/marketing/content";
+import { PRODUCT, FEATURES } from "@/lib/marketing/content";
 
 export function SiteFooter() {
   return (
@@ -13,13 +13,13 @@ export function SiteFooter() {
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--gym-accent)] text-black">
                 <Dumbbell size={18} strokeWidth={2.5} />
               </span>
-              <span className="gym-display text-lg text-[var(--gym-text)]">{GYM.name}</span>
+              <span className="gym-display text-lg text-[var(--gym-text)]">{PRODUCT.name}</span>
             </Link>
-            <p className="mt-3 text-sm leading-relaxed text-[var(--gym-text-muted)]">{GYM.tagline}</p>
+            <p className="mt-3 text-sm leading-relaxed text-[var(--gym-text-muted)]">{PRODUCT.tagline}</p>
           </div>
 
           <div>
-            <h3 className="gym-display text-sm tracking-widest text-[var(--gym-text)]">Explore</h3>
+            <h3 className="gym-display text-sm tracking-widest text-[var(--gym-text)]">Product</h3>
             <ul className="mt-4 space-y-2.5">
               {MARKETING_NAV.map((item) => (
                 <li key={item.href}>
@@ -28,16 +28,21 @@ export function SiteFooter() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/dashboard" className="text-sm text-[var(--gym-text-muted)] transition hover:text-[var(--gym-accent)]">
+                  Live demo
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="gym-display text-sm tracking-widest text-[var(--gym-text)]">Programs</h3>
+            <h3 className="gym-display text-sm tracking-widest text-[var(--gym-text)]">What it does</h3>
             <ul className="mt-4 space-y-2.5">
-              {PROGRAMS.slice(0, 5).map((program) => (
-                <li key={program.slug}>
-                  <Link href="/programs" className="text-sm text-[var(--gym-text-muted)] transition hover:text-[var(--gym-accent)]">
-                    {program.name}
+              {FEATURES.slice(0, 5).map((feature) => (
+                <li key={feature.slug}>
+                  <Link href="/features" className="text-sm text-[var(--gym-text-muted)] transition hover:text-[var(--gym-accent)]">
+                    {feature.name}
                   </Link>
                 </li>
               ))}
@@ -45,27 +50,27 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="gym-display text-sm tracking-widest text-[var(--gym-text)]">Visit Us</h3>
+            <h3 className="gym-display text-sm tracking-widest text-[var(--gym-text)]">Talk to us</h3>
             <ul className="mt-4 space-y-3 text-sm text-[var(--gym-text-muted)]">
               <li className="flex gap-2.5">
-                <MapPin size={16} className="mt-0.5 shrink-0 text-[var(--gym-accent)]" />
-                <span>{GYM.address}</span>
-              </li>
-              <li className="flex gap-2.5">
                 <Phone size={16} className="mt-0.5 shrink-0 text-[var(--gym-accent)]" />
-                <a href={`tel:${GYM.phone.replace(/\s/g, "")}`} className="transition hover:text-[var(--gym-accent)]">
-                  {GYM.phone}
+                <a href={`tel:${PRODUCT.salesPhone.replace(/\s/g, "")}`} className="transition hover:text-[var(--gym-accent)]">
+                  {PRODUCT.salesPhone}
                 </a>
               </li>
               <li className="flex gap-2.5">
                 <Mail size={16} className="mt-0.5 shrink-0 text-[var(--gym-accent)]" />
-                <a href={`mailto:${GYM.email}`} className="transition hover:text-[var(--gym-accent)]">
-                  {GYM.email}
+                <a href={`mailto:${PRODUCT.salesEmail}`} className="break-all transition hover:text-[var(--gym-accent)]">
+                  {PRODUCT.salesEmail}
                 </a>
               </li>
               <li className="flex gap-2.5">
+                <MapPin size={16} className="mt-0.5 shrink-0 text-[var(--gym-accent)]" />
+                <span>{PRODUCT.address}</span>
+              </li>
+              <li className="flex gap-2.5">
                 <Clock3 size={16} className="mt-0.5 shrink-0 text-[var(--gym-accent)]" />
-                <span>Open 7 days · 5 AM – 11 PM</span>
+                <span>{PRODUCT.supportHours}</span>
               </li>
             </ul>
           </div>
@@ -73,10 +78,10 @@ export function SiteFooter() {
 
         <div className="mt-10 flex flex-col gap-3 border-t border-[var(--gym-border)] pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-[var(--gym-text-dim)]">
-            &copy; {new Date().getFullYear()} {GYM.name}. All rights reserved.
+            &copy; {new Date().getFullYear()} {PRODUCT.name}. All rights reserved.
           </p>
           <Link href="/dashboard" className="text-xs font-semibold text-[var(--gym-text-dim)] transition hover:text-[var(--gym-accent)]">
-            Staff Login
+            Sign in
           </Link>
         </div>
       </div>

@@ -4,28 +4,31 @@ import { useState, type FormEvent } from "react";
 import { Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { waMeLink } from "@/lib/whatsapp/templates";
 import { tryNormalizePhone } from "@/lib/integrations/phone";
-import { GYM, PROGRAMS } from "@/lib/marketing/content";
+import { PRODUCT, TIERS } from "@/lib/marketing/content";
 
-const TIMES = ["Early morning (5–8 AM)", "Morning (8–11 AM)", "Afternoon (12–4 PM)", "Evening (5–8 PM)", "Late evening (8–11 PM)"];
+const SIZES = ["Under 100 members", "100 – 400 members", "400 – 1,000 members", "Over 1,000 members", "Opening soon"];
+
+const TRACKING = ["A paper register", "Excel or Google Sheets", "Another software", "Nothing yet"];
 
 /**
- * Free-trial enquiry form.
+ * Trial / demo enquiry form.
  *
  * There is no public enquiries backend yet, so rather than pretend to submit,
- * this composes the enquiry as a WhatsApp message to the gym — the same
- * pre-filled `wa.me` approach the owner's reminder flow already uses, and the
- * channel a Pakistani gym actually gets booked through.
+ * this composes the enquiry as a WhatsApp message to the sales number — the
+ * same pre-filled `wa.me` approach the product itself uses for reminders, and
+ * the channel Pakistani gym owners actually reply on.
  */
 export function TrialForm() {
   const [name, setName] = useState("");
+  const [gym, setGym] = useState("");
   const [phone, setPhone] = useState("");
-  const [program, setProgram] = useState(PROGRAMS[0].name);
-  const [time, setTime] = useState(TIMES[0]);
+  const [size, setSize] = useState(SIZES[1]);
+  const [tracking, setTracking] = useState(TRACKING[0]);
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
 
-  const gymNumber = tryNormalizePhone(GYM.phone);
+  const salesNumber = tryNormalizePhone(PRODUCT.salesPhone);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -34,11 +37,15 @@ export function TrialForm() {
       setError("Please tell us your name.");
       return;
     }
+    if (!gym.trim()) {
+      setError("Please tell us your gym's name.");
+      return;
+    }
     if (!tryNormalizePhone(phone)) {
       setError("Please enter a valid Pakistani mobile number, e.g. 0300 1234567.");
       return;
     }
-    if (!gymNumber) {
+    if (!salesNumber) {
       setError("We could not open WhatsApp. Please call us instead.");
       return;
     }
@@ -46,18 +53,19 @@ export function TrialForm() {
     setError(null);
 
     const message = [
-      `Hi ${GYM.name}, I would like to book a free trial session.`,
+      `Hi ${PRODUCT.name}, I would like to start a free trial.`,
       "",
       `Name: ${name.trim()}`,
+      `Gym: ${gym.trim()}`,
       `Phone: ${phone.trim()}`,
-      `Interested in: ${program}`,
-      `Preferred time: ${time}`,
+      `Gym size: ${size}`,
+      `Currently tracking with: ${tracking}`,
       note.trim() ? `Note: ${note.trim()}` : null,
     ]
       .filter((line) => line !== null)
       .join("\n");
 
-    window.open(waMeLink(gymNumber.msisdn, message), "_blank", "noopener,noreferrer");
+    window.open(waMeLink(salesNumber.msisdn, message), "_blank", "noopener,noreferrer");
     setSent(true);
   };
 
@@ -67,9 +75,10 @@ export function TrialForm() {
 
   return (
     <form onSubmit={onSubmit} className="gym-card p-6">
-      <h2 className="gym-display text-2xl text-[var(--gym-text)]">Book your free session</h2>
+      <h2 className="gym-display text-2xl text-[var(--gym-text)]">Start your free trial</h2>
       <p className="mt-1.5 text-sm text-[var(--gym-text-muted)]">
-        Fill this in and we will open WhatsApp with your details ready to send.
+        Fourteen days on your own member list, no card. Fill this in and we will open WhatsApp with your details ready to
+        send.
       </p>
 
       <div className="mt-6 space-y-4">
@@ -83,6 +92,20 @@ export function TrialForm() {
             onChange={(e) => setName(e.target.value)}
             placeholder="Ahmed Khan"
             autoComplete="name"
+            className={fieldClass}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="trial-gym" className={labelClass}>
+            Gym name
+          </label>
+          <input
+            id="trial-gym"
+            value={gym}
+            onChange={(e) => setGym(e.target.value)}
+            placeholder="Iron Peak Fitness"
+            autoComplete="organization"
             className={fieldClass}
           />
         </div>
@@ -103,25 +126,29 @@ export function TrialForm() {
         </div>
 
         <div>
-          <label htmlFor="trial-program" className={labelClass}>
-            What do you want to try?
+          <label htmlFor="trial-size" className={labelClass}>
+            How many members?
           </label>
-          <select id="trial-program" value={program} onChange={(e) => setProgram(e.target.value)} className={fieldClass}>
-            {PROGRAMS.map((p) => (
-              <option key={p.slug} value={p.name}>
-                {p.name}
+          <select id="trial-size" value={size} onChange={(e) => setSize(e.target.value)} className={fieldClass}>
+            {SIZES.map((s) => (
+              <option key={s} value={s}>
+                {s}
               </option>
             ))}
-            <option value="Not sure yet">Not sure yet — recommend something</option>
           </select>
         </div>
 
         <div>
-          <label htmlFor="trial-time" className={labelClass}>
-            When can you train?
+          <label htmlFor="trial-tracking" className={labelClass}>
+            How do you track them today?
           </label>
-          <select id="trial-time" value={time} onChange={(e) => setTime(e.target.value)} className={fieldClass}>
-            {TIMES.map((t) => (
+          <select
+            id="trial-tracking"
+            value={tracking}
+            onChange={(e) => setTracking(e.target.value)}
+            className={fieldClass}
+          >
+            {TRACKING.map((t) => (
               <option key={t} value={t}>
                 {t}
               </option>
@@ -138,7 +165,7 @@ export function TrialForm() {
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={3}
-            placeholder="Injuries, goals, or questions"
+            placeholder="Questions, or what you need it to do"
             className={`${fieldClass} resize-none`}
           />
         </div>
@@ -154,7 +181,7 @@ export function TrialForm() {
       {sent && !error && (
         <p role="status" className="mt-4 flex items-center gap-2 text-sm font-semibold text-[var(--gym-success)]">
           <CheckCircle2 size={16} className="shrink-0" />
-          WhatsApp opened — press send and we will confirm your slot.
+          WhatsApp opened — press send and we will set your account up today.
         </p>
       )}
 
@@ -164,9 +191,9 @@ export function TrialForm() {
       </button>
 
       <p className="mt-3 text-center text-xs text-[var(--gym-text-dim)]">
-        Prefer to talk? Call{" "}
-        <a href={`tel:${GYM.phone.replace(/\s/g, "")}`} className="font-semibold text-[var(--gym-text-muted)] underline">
-          {GYM.phone}
+        Plans from {new Intl.NumberFormat("en-US").format(TIERS[0].monthly)} PKR a month. Prefer to talk? Call{" "}
+        <a href={`tel:${PRODUCT.salesPhone.replace(/\s/g, "")}`} className="font-semibold text-[var(--gym-text-muted)] underline">
+          {PRODUCT.salesPhone}
         </a>
       </p>
     </form>

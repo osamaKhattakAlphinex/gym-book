@@ -35,14 +35,16 @@ export function SegmentedOverview({
     { key: "expiring", value: expiring, color: "var(--gym-warning)" },
     { key: "expired", value: expired, color: "var(--gym-danger)" },
   ];
+  // A 2px gap in the surface colour separates touching segments — the gap does
+  // the separating, not a stroke drawn around each one.
   return (
-    <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-[var(--gym-surface-2)]">
+    <div className="flex h-3 w-full gap-[2px] overflow-hidden rounded-full bg-[var(--gym-surface-2)]">
       {segments.map((s) =>
         s.value > 0 ? (
           <div
             key={s.key}
             style={{ width: `${(s.value / total) * 100}%`, backgroundColor: s.color }}
-            className="h-full first:rounded-l-full last:rounded-r-full"
+            className="h-full rounded-full"
           />
         ) : null
       )}

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Dumbbell, Menu, X, ArrowRight } from "lucide-react";
 import { MARKETING_NAV } from "@/lib/marketing/routes";
-import { GYM } from "@/lib/marketing/content";
+import { PRODUCT } from "@/lib/marketing/content";
 
 export function SiteHeader() {
   const pathname = usePathname() ?? "";
@@ -15,11 +15,11 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--gym-border)] bg-[var(--gym-bg)]/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 md:px-8">
-        <Link href="/" className="flex items-center gap-2.5" aria-label={`${GYM.name} home`}>
+        <Link href="/" className="flex items-center gap-2.5" aria-label={`${PRODUCT.name} home`}>
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--gym-accent)] text-black">
             <Dumbbell size={18} strokeWidth={2.5} />
           </span>
-          <span className="gym-display text-lg text-[var(--gym-text)] md:text-xl">{GYM.name}</span>
+          <span className="gym-display text-lg text-[var(--gym-text)] md:text-xl">{PRODUCT.name}</span>
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
@@ -46,10 +46,10 @@ export function SiteHeader() {
             href="/dashboard"
             className="gym-display rounded-lg px-3 py-2 text-sm tracking-wide text-[var(--gym-text-muted)] transition hover:text-[var(--gym-text)]"
           >
-            Staff Login
+            Sign in
           </Link>
           <Link href="/contact" className="gym-btn gym-btn-primary px-4 py-2.5 text-sm">
-            Free Trial
+            Free trial
             <ArrowRight size={16} strokeWidth={2.5} />
           </Link>
         </div>
@@ -89,10 +89,10 @@ export function SiteHeader() {
               onClick={close}
               className="gym-display rounded-lg px-3 py-3 text-base tracking-wide text-[var(--gym-text-muted)]"
             >
-              Staff Login
+              Sign in
             </Link>
             <Link href="/contact" onClick={close} className="gym-btn gym-btn-primary mt-2 w-full py-3 text-sm">
-              Claim Free Trial
+              Start free trial
               <ArrowRight size={16} strokeWidth={2.5} />
             </Link>
           </nav>

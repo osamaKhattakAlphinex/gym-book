@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Check, Quote, Clock, Star } from "lucide-react";
+import { Check, Quote, Star } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import type { MembershipTier, Program, Testimonial, Trainer } from "@/lib/marketing/content";
+import { annualPrice, annualSavingsPercent } from "@/lib/marketing/content";
+import type { Feature, Integration, Testimonial, Tier } from "@/lib/marketing/content";
 
-export function ProgramCard({ program }: { program: Program }) {
-  const Icon = program.icon;
+export function FeatureCard({ feature }: { feature: Feature }) {
+  const Icon = feature.icon;
 
   return (
     <article className="gym-card gym-card-hover group relative overflow-hidden p-5">
@@ -15,43 +16,47 @@ export function ProgramCard({ program }: { program: Program }) {
         <Icon size={24} strokeWidth={2} />
       </span>
 
-      <h3 className="gym-display mt-4 text-xl text-[var(--gym-text)]">{program.name}</h3>
-      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[var(--gym-accent)]">{program.tagline}</p>
-      <p className="mt-3 text-sm leading-relaxed text-[var(--gym-text-muted)]">{program.description}</p>
-
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--gym-border)] bg-[var(--gym-surface-2)] px-2.5 py-1 text-[11px] font-semibold text-[var(--gym-text-muted)]">
-          <Clock size={12} />
-          {program.duration}
-        </span>
-        <span className="inline-flex items-center rounded-full border border-[var(--gym-border)] bg-[var(--gym-surface-2)] px-2.5 py-1 text-[11px] font-semibold text-[var(--gym-text-muted)]">
-          {program.level}
-        </span>
-      </div>
+      <h3 className="gym-display mt-4 text-xl text-[var(--gym-text)]">{feature.name}</h3>
+      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[var(--gym-accent)]">{feature.tagline}</p>
+      <p className="mt-3 text-sm leading-relaxed text-[var(--gym-text-muted)]">{feature.description}</p>
     </article>
   );
 }
 
-export function TrainerCard({ trainer }: { trainer: Trainer }) {
+export function IntegrationCard({ integration }: { integration: Integration }) {
+  const Icon = integration.icon;
+  const builtIn = integration.status === "Built in";
+
   return (
-    <article className="gym-card gym-card-hover overflow-hidden text-center">
-      {/* Initials medallion stands in for a photo — no stock imagery. */}
-      <div className="gym-stripes flex items-center justify-center border-b border-[var(--gym-border)] bg-[var(--gym-surface-2)] py-8">
-        <span className="gym-display flex h-20 w-20 items-center justify-center rounded-full border-2 border-[var(--gym-accent)] bg-[var(--gym-bg)] text-2xl text-[var(--gym-accent)]">
-          {trainer.initials}
-        </span>
-      </div>
-      <div className="p-5">
-        <h3 className="gym-display text-lg text-[var(--gym-text)]">{trainer.name}</h3>
-        <p className="mt-1 text-xs font-bold uppercase tracking-wider text-[var(--gym-accent)]">{trainer.role}</p>
-        <p className="mt-2.5 text-sm text-[var(--gym-text-muted)]">{trainer.specialty}</p>
-        <p className="mt-2 text-xs text-[var(--gym-text-dim)]">{trainer.experience} coaching</p>
+    <article className="gym-card gym-card-hover flex gap-4 p-5">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--gym-accent)]/10 text-[var(--gym-accent)]">
+        <Icon size={20} />
+      </span>
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="gym-display text-base text-[var(--gym-text)]">{integration.name}</h3>
+          <span
+            className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+              builtIn
+                ? "border-[var(--gym-success)]/30 bg-[var(--gym-success)]/10 text-[var(--gym-success)]"
+                : "border-[var(--gym-border)] bg-[var(--gym-surface-2)] text-[var(--gym-text-muted)]"
+            }`}
+          >
+            {integration.status}
+          </span>
+        </div>
+        <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--gym-text-dim)]">
+          {integration.category}
+        </p>
+        <p className="mt-2.5 text-sm leading-relaxed text-[var(--gym-text-muted)]">{integration.description}</p>
       </div>
     </article>
   );
 }
 
-export function PricingCard({ tier }: { tier: MembershipTier }) {
+export function PricingCard({ tier, annual = false }: { tier: Tier; annual?: boolean }) {
+  const perMonth = annual ? Math.round(annualPrice(tier) / 12) : tier.monthly;
+
   return (
     <article
       className={`relative flex flex-col rounded-2xl border p-6 transition ${
@@ -69,25 +74,28 @@ export function PricingCard({ tier }: { tier: MembershipTier }) {
 
       <h3 className="gym-display text-xl text-[var(--gym-text)]">{tier.name}</h3>
       <p className="mt-0.5 text-xs font-semibold uppercase tracking-wider text-[var(--gym-text-muted)]">
-        {tier.plan} membership
+        {tier.memberCap}
       </p>
 
       <div className="mt-5">
-        <span className="gym-stat text-4xl text-[var(--gym-text)]">{formatCurrency(tier.price)}</span>
+        <span className="gym-figure text-4xl text-[var(--gym-text)]">{formatCurrency(perMonth)}</span>
+        <span className="ml-1 text-sm font-medium text-[var(--gym-text-muted)]">/ month</span>
         <p className="mt-1.5 text-xs text-[var(--gym-text-muted)]">
-          {tier.months === 1 ? "Billed monthly" : `${formatCurrency(tier.perMonth)} / month, paid upfront`}
+          {annual ? `${formatCurrency(annualPrice(tier))} billed yearly` : "Billed monthly, cancel anytime"}
         </p>
       </div>
 
-      {tier.savingsPercent > 0 ? (
+      {annual ? (
         <p className="mt-3 inline-flex w-fit rounded-full border border-[var(--gym-success)]/30 bg-[var(--gym-success)]/10 px-2.5 py-1 text-[11px] font-bold text-[var(--gym-success)]">
-          Save {tier.savingsPercent}% vs monthly
+          Save {annualSavingsPercent()}% — two months free
         </p>
       ) : (
         <p className="mt-3 inline-flex w-fit rounded-full border border-[var(--gym-border)] px-2.5 py-1 text-[11px] font-bold text-[var(--gym-text-muted)]">
-          No commitment
+          No setup fee
         </p>
       )}
+
+      <p className="mt-4 text-sm text-[var(--gym-text-muted)]">{tier.blurb}</p>
 
       <ul className="mt-5 flex-1 space-y-2.5">
         {tier.perks.map((perk) => (
@@ -102,7 +110,7 @@ export function PricingCard({ tier }: { tier: MembershipTier }) {
         href="/contact"
         className={`gym-btn mt-6 w-full py-3 text-sm ${tier.featured ? "gym-btn-primary" : "gym-btn-ghost"}`}
       >
-        Get Started
+        Start free trial
       </Link>
     </article>
   );

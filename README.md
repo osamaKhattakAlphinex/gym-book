@@ -1,15 +1,17 @@
 # Gym Membership Dashboard
 
-A mobile-first gym membership and subscription management prototype, built for a local gym owner who currently tracks members on paper and in spreadsheets.
+GymBook — mobile-first gym management software for Pakistani gyms, plus the public site that sells it. Built for owners who currently track members on paper and in spreadsheets.
+
+Two surfaces in one app: a **public product site** at `/` aimed at gym owners, and the **owner's dashboard** at `/dashboard` where a subscribed gym runs its day.
 
 ## What it does
 
-- **Public marketing site** (`/`) — a hero, program grid, weekly class timetable, coach profiles, membership pricing with a feature comparison, testimonials, an FAQ and a free-trial enquiry form that opens WhatsApp pre-filled. Pages: `/programs`, `/schedule`, `/trainers`, `/pricing`, `/contact`.
-- **Dashboard** (`/dashboard`) — active/expiring/expired counts, today's collections, an expiring-membership alert list, quick actions, recent activity, and a membership overview bar.
+- **Product marketing site** (`/`) — the public site for GymBook itself, addressed to gym owners rather than their members: the problem it solves, the feature grid, how setup works, subscription pricing with a monthly/yearly toggle and a feature comparison, owner testimonials, an FAQ, and a trial enquiry form that opens WhatsApp pre-filled. Pages: `/features`, `/integrations`, `/pricing`, `/contact`.
+- **Dashboard** (`/dashboard`) — stat tiles with trend sparklines and period deltas, a six-month revenue column chart, a membership mix breakdown, a dense "needs chasing" list with inline reminder/open actions, recent activity and quick actions.
 - **Members** — searchable/filterable directory, member detail with a countdown progress bar and payment history, add/edit/delete.
 - **Renewals & Payments** — fast renew and record-payment flows that update expiry dates, payment history, and dashboard counts immediately.
 - **Expiring Soon** — Today / 3 / 7 / 30-day tabs grouped by urgency, with a WhatsApp / SMS / Call reminder sheet and an editable pre-written message.
-- **Payments, Reports, Notifications, Settings** — payment history with summaries and filters, a simple revenue chart, a notification center, and gym/owner settings.
+- **Payments, Reports, Notifications, Settings** — payment history with summaries and filters, revenue and membership reporting, a notification center, and gym/owner settings.
 - **WhatsApp reminders & receipts** — fee reminders, expiry warnings and payment receipts in English or Roman Urdu, sent by the WhatsApp Business API when one is configured and as a pre-filled `wa.me` link when it isn't.
 - **JazzCash payments** — shareable payment links, direct mobile-account charges and card checkout, with signature-verified callbacks and an automatic WhatsApp receipt.
 
@@ -21,7 +23,9 @@ Dark charcoal foundation with an electric lime accent, condensed uppercase displ
 
 The public site and the owner's dashboard share one set of tokens and utility classes in `app/globals.css`, so both read as the same gym. The dashboard keeps bottom navigation + a floating Add Member action on mobile and a sidebar on desktop; `AppChrome` keeps that chrome off the marketing pages and off the member-facing payment routes.
 
-The marketing numbers are derived rather than typed: the weekly class count comes from the timetable, the coach count from the team list, and every quoted price from `PLAN_FEES` — the same constants the dashboard bills from.
+Dashboard figures are set in Inter with proportional numerals rather than the condensed display face — those are numbers read for precision, and `tabular-nums` is reserved for columns that must align vertically. Charts follow one rule set: a single series gets no legend, the current period carries the accent while earlier periods sit in a neutral de-emphasis gray, bar thickness is capped with a rounded data-end, and every chart also exposes its values as a visually hidden table so nothing is available on hover alone.
+
+Two audiences, one design system. The marketing site sells **GymBook**; the gym inside the dashboard (Iron Peak Fitness) is a tenant, not the subject of the public site. Subscription pricing is deliberately *not* derived from `PLAN_FEES` — those are the fees a gym charges its own members, which have nothing to do with what a gym pays for the software.
 
 ## Payments & messaging
 
@@ -34,6 +38,8 @@ cp .env.example .env.local   # then fill in what you have
 Settings → Integrations shows what is live and names any variable that is still missing. Full write-up, including how it was verified: [`docs/jazzcash-whatsapp.md`](docs/jazzcash-whatsapp.md).
 
 ## Data
+
+Derived series for the dashboard and reports (monthly revenue, daily collections, member growth, period deltas) live in `lib/analytics.ts` as pure functions over the store's arrays, so both screens read the same numbers.
 
 Member and payment state lives in a client-side React context backed by `localStorage`, seeded with 20 realistic members (Pakistani names/phone numbers, PKR currency) spread across active, expiring, and expired statuses. Every action — adding a member, recording a payment, renewing a membership — updates counts and activity across every screen immediately. There is no member database or owner auth yet.
 

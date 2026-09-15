@@ -1,41 +1,42 @@
 import {
+  Users,
+  BellRing,
+  Wallet,
+  CalendarClock,
   Dumbbell,
-  Flame,
-  Swords,
-  HeartPulse,
-  Waves,
-  BicepsFlexed,
-  ShowerHead,
-  ParkingCircle,
-  Wifi,
-  Lock,
-  Snowflake,
-  CupSoda,
+  ChartNoAxesColumn,
+  MessageCircle,
+  CircleDollarSign,
+  Languages,
+  Receipt,
+  ShieldCheck,
+  Smartphone,
+  Zap,
+  Database,
   type LucideIcon,
 } from "lucide-react";
-import { PLAN_FEES, PLAN_MONTHS } from "@/lib/utils";
-import type { Plan } from "@/lib/types";
 
 /**
  * Content for the public marketing site.
  *
- * Kept as data rather than inlined in the pages so the same programs, plans
- * and trainers stay consistent across the home page and the detail pages.
- * Membership pricing is derived from `PLAN_FEES` — the marketing site and the
- * owner's dashboard quote the same numbers by construction.
+ * GymBook is the product being sold; the gym in the dashboard (Iron Peak
+ * Fitness) is a tenant, not the subject of this site. Keep that split — the
+ * marketing copy addresses gym owners, never their members.
+ *
+ * Subscription pricing lives here and is deliberately NOT derived from
+ * `PLAN_FEES`: those are the membership fees a gym charges its own members,
+ * which have nothing to do with what a gym pays for the software.
  */
 
-export const GYM = {
-  name: "Iron Peak Fitness",
-  tagline: "Train hard. Recover smart. Repeat.",
-  phone: "+92 300 0000000",
-  email: "hello@ironpeakfitness.pk",
+export const PRODUCT = {
+  name: "GymBook",
+  tagline: "Gym management that runs on WhatsApp.",
+  description:
+    "Memberships, renewals, payments and reminders for Pakistani gyms — without the register, the spreadsheet or the awkward conversation about money.",
+  salesEmail: "sales@gymbook.pk",
+  salesPhone: "+92 300 0000000",
   address: "Gulberg III, Main Boulevard, Lahore",
-  hours: [
-    { days: "Monday – Friday", time: "5:00 AM – 11:00 PM" },
-    { days: "Saturday", time: "6:00 AM – 10:00 PM" },
-    { days: "Sunday", time: "8:00 AM – 8:00 PM" },
-  ],
+  supportHours: "Support 9 AM – 9 PM, seven days a week",
 } as const;
 
 export interface Stat {
@@ -43,279 +44,246 @@ export interface Stat {
   label: string;
 }
 
-export interface Program {
+export const STATS: Stat[] = [
+  { value: "120+", label: "Gyms running on it" },
+  { value: "38k", label: "Memberships tracked" },
+  { value: "94%", label: "Renewal reminder open rate" },
+  { value: "< 1 day", label: "Average setup time" },
+];
+
+/* ------------------------------------------------------------------ Features */
+
+export interface Feature {
   slug: string;
   name: string;
   icon: LucideIcon;
   tagline: string;
   description: string;
-  level: "Beginner friendly" | "All levels" | "Intermediate+";
-  duration: string;
 }
 
-export const PROGRAMS: Program[] = [
+export const FEATURES: Feature[] = [
   {
-    slug: "strength",
-    name: "Strength & Powerlifting",
+    slug: "members",
+    name: "Member directory",
+    icon: Users,
+    tagline: "Every member, one screen",
+    description:
+      "Names, numbers, plans, join dates and full payment history — searchable and filterable. Replaces the register without asking anyone to learn a database.",
+  },
+  {
+    slug: "expiry",
+    name: "Expiry tracking",
+    icon: CalendarClock,
+    tagline: "Nobody lapses quietly",
+    description:
+      "Every membership is sorted into active, expiring within seven days, or expired. Open the app and the list of people to chase is already written.",
+  },
+  {
+    slug: "reminders",
+    name: "WhatsApp reminders",
+    icon: BellRing,
+    tagline: "Sent where members actually read",
+    description:
+      "Fee reminders, expiry warnings and receipts go out over WhatsApp in English or Roman Urdu. Configure the Business API and they send themselves.",
+  },
+  {
+    slug: "payments",
+    name: "Payments & renewals",
+    icon: Wallet,
+    tagline: "Cash first, digital when you want it",
+    description:
+      "Record cash in two taps, or send a JazzCash link a member pays from their phone. Renewals update the expiry date and the books in the same action.",
+  },
+  {
+    slug: "inventory",
+    name: "Equipment inventory",
     icon: Dumbbell,
-    tagline: "Squat, bench, deadlift",
+    tagline: "Know what is broken",
     description:
-      "Platform work on calibrated plates with coached technique on the big three. Programming blocks run eight weeks, with a tested max at the end of each.",
-    level: "All levels",
-    duration: "60–75 min",
+      "Track every machine, its condition and its maintenance log. The dashboard flags anything needing repair before a member finds it first.",
   },
   {
-    slug: "hiit",
-    name: "HIIT & Conditioning",
-    icon: Flame,
-    tagline: "Short rounds, full send",
+    slug: "reports",
+    name: "Reports",
+    icon: ChartNoAxesColumn,
+    tagline: "Where the month actually went",
     description:
-      "Interval circuits built on rowers, bikes and sleds. Every station scales up or down, so a first-timer and a competitor can work the same clock.",
-    level: "All levels",
-    duration: "45 min",
-  },
-  {
-    slug: "boxing",
-    name: "Boxing & Pad Work",
-    icon: Swords,
-    tagline: "Footwork, combinations, rounds",
-    description:
-      "Technical boxing from stance and guard through to pad rounds with a coach. Non-contact by default; sparring is optional and supervised.",
-    level: "Beginner friendly",
-    duration: "60 min",
-  },
-  {
-    slug: "functional",
-    name: "Functional Fitness",
-    icon: BicepsFlexed,
-    tagline: "Carry, climb, lift, move",
-    description:
-      "Kettlebells, sandbags and gymnastics rings in mixed-modal workouts. Built for strength that transfers outside the gym floor.",
-    level: "Intermediate+",
-    duration: "60 min",
-  },
-  {
-    slug: "cardio",
-    name: "Cardio & Endurance",
-    icon: HeartPulse,
-    tagline: "Build the engine",
-    description:
-      "Zone-two treadmill and cycling work with heart-rate guidance, plus threshold sessions for members training for a race.",
-    level: "Beginner friendly",
-    duration: "30–60 min",
-  },
-  {
-    slug: "mobility",
-    name: "Mobility & Yoga",
-    icon: Waves,
-    tagline: "Move better, hurt less",
-    description:
-      "Guided mobility flows and restorative yoga on the mat floor. The session most members skip and every coach here recommends.",
-    level: "All levels",
-    duration: "45 min",
+      "Monthly revenue, new joiners, renewals and lapsed members — the numbers you need for a landlord, a partner or your own peace of mind.",
   },
 ];
 
-export interface Trainer {
+/* -------------------------------------------------------------- Integrations */
+
+export interface Integration {
   name: string;
-  role: string;
-  specialty: string;
-  experience: string;
-  initials: string;
+  icon: LucideIcon;
+  category: string;
+  description: string;
+  status: "Built in" | "Optional";
 }
 
-export const TRAINERS: Trainer[] = [
+export const INTEGRATIONS: Integration[] = [
   {
-    name: "Bilal Ahmed",
-    role: "Head Strength Coach",
-    specialty: "Powerlifting · Olympic lifting",
-    experience: "11 years",
-    initials: "BA",
+    name: "WhatsApp Business API",
+    icon: MessageCircle,
+    category: "Messaging",
+    description:
+      "Connect a Meta Cloud API account and reminders, warnings and receipts send automatically to every member.",
+    status: "Optional",
   },
   {
-    name: "Ayesha Siddiqui",
-    role: "Conditioning Lead",
-    specialty: "HIIT · Endurance programming",
-    experience: "7 years",
-    initials: "AS",
+    name: "Twilio for WhatsApp",
+    icon: Smartphone,
+    category: "Messaging",
+    description: "Already on Twilio? Point GymBook at your credentials instead — same messages, same templates.",
+    status: "Optional",
   },
   {
-    name: "Usman Tariq",
-    role: "Boxing Coach",
-    specialty: "Boxing · Pad work · Footwork",
-    experience: "9 years",
-    initials: "UT",
+    name: "Pre-filled wa.me links",
+    icon: Zap,
+    category: "Messaging",
+    description:
+      "With nothing configured at all, every reminder still opens WhatsApp with the message written and the right number attached. You press send.",
+    status: "Built in",
   },
   {
-    name: "Hina Malik",
-    role: "Mobility & Yoga Coach",
-    specialty: "Mobility · Injury rehab",
-    experience: "6 years",
-    initials: "HM",
+    name: "JazzCash",
+    icon: CircleDollarSign,
+    category: "Payments",
+    description:
+      "Shareable payment links, mobile-account charges and card checkout, with signature-verified callbacks and an automatic receipt.",
+    status: "Optional",
+  },
+  {
+    name: "Cash, bank transfer, Easypaisa, Raast",
+    icon: Receipt,
+    category: "Payments",
+    description: "Recorded as first-class payment methods. Digital rails are additive — cash entry never becomes a second-class path.",
+    status: "Built in",
+  },
+  {
+    name: "Roman Urdu messaging",
+    icon: Languages,
+    category: "Localisation",
+    description:
+      "Every template ships in plain English and Roman Urdu, because that is what members actually read on a cheap Android.",
+    status: "Built in",
   },
 ];
 
-export interface ClassSlot {
-  time: string;
-  name: string;
-  coach: string;
-  program: string;
+/* ------------------------------------------------------------ How it works */
+
+export interface WorkflowStep {
+  step: string;
+  title: string;
+  body: string;
 }
 
-export interface ScheduleDay {
-  day: string;
-  short: string;
-  slots: ClassSlot[];
-}
-
-export const SCHEDULE: ScheduleDay[] = [
+export const WORKFLOW: WorkflowStep[] = [
   {
-    day: "Monday",
-    short: "Mon",
-    slots: [
-      { time: "6:00 AM", name: "Strength — Lower", coach: "Bilal Ahmed", program: "Strength" },
-      { time: "7:30 AM", name: "HIIT Circuit", coach: "Ayesha Siddiqui", program: "HIIT" },
-      { time: "6:00 PM", name: "Boxing Fundamentals", coach: "Usman Tariq", program: "Boxing" },
-      { time: "8:00 PM", name: "Mobility Flow", coach: "Hina Malik", program: "Mobility" },
-    ],
+    step: "01",
+    title: "Move your register across",
+    body: "Add members by hand or send us your spreadsheet and we import it. Most gyms are running the same afternoon they sign up.",
   },
   {
-    day: "Tuesday",
-    short: "Tue",
-    slots: [
-      { time: "6:00 AM", name: "Functional Fitness", coach: "Ayesha Siddiqui", program: "Functional" },
-      { time: "7:30 AM", name: "Zone 2 Cardio", coach: "Hina Malik", program: "Cardio" },
-      { time: "6:00 PM", name: "Strength — Upper", coach: "Bilal Ahmed", program: "Strength" },
-      { time: "7:30 PM", name: "Pad Rounds", coach: "Usman Tariq", program: "Boxing" },
-    ],
+    step: "02",
+    title: "Let it watch the dates",
+    body: "GymBook sorts every membership by how close it is to expiring, so the day's follow-up list writes itself instead of living in your head.",
   },
   {
-    day: "Wednesday",
-    short: "Wed",
-    slots: [
-      { time: "6:00 AM", name: "HIIT Circuit", coach: "Ayesha Siddiqui", program: "HIIT" },
-      { time: "7:30 AM", name: "Mobility Flow", coach: "Hina Malik", program: "Mobility" },
-      { time: "6:00 PM", name: "Strength — Full Body", coach: "Bilal Ahmed", program: "Strength" },
-      { time: "8:00 PM", name: "Boxing Fundamentals", coach: "Usman Tariq", program: "Boxing" },
-    ],
-  },
-  {
-    day: "Thursday",
-    short: "Thu",
-    slots: [
-      { time: "6:00 AM", name: "Strength — Lower", coach: "Bilal Ahmed", program: "Strength" },
-      { time: "7:30 AM", name: "Functional Fitness", coach: "Ayesha Siddiqui", program: "Functional" },
-      { time: "6:00 PM", name: "Threshold Intervals", coach: "Hina Malik", program: "Cardio" },
-      { time: "7:30 PM", name: "Pad Rounds", coach: "Usman Tariq", program: "Boxing" },
-    ],
-  },
-  {
-    day: "Friday",
-    short: "Fri",
-    slots: [
-      { time: "6:00 AM", name: "HIIT Circuit", coach: "Ayesha Siddiqui", program: "HIIT" },
-      { time: "7:30 AM", name: "Strength — Upper", coach: "Bilal Ahmed", program: "Strength" },
-      { time: "5:30 PM", name: "Open Platform", coach: "Bilal Ahmed", program: "Strength" },
-      { time: "7:00 PM", name: "Restorative Yoga", coach: "Hina Malik", program: "Mobility" },
-    ],
-  },
-  {
-    day: "Saturday",
-    short: "Sat",
-    slots: [
-      { time: "8:00 AM", name: "Team Conditioning", coach: "Ayesha Siddiqui", program: "HIIT" },
-      { time: "10:00 AM", name: "Strength — Full Body", coach: "Bilal Ahmed", program: "Strength" },
-      { time: "12:00 PM", name: "Boxing Open Mat", coach: "Usman Tariq", program: "Boxing" },
-    ],
-  },
-  {
-    day: "Sunday",
-    short: "Sun",
-    slots: [
-      { time: "9:00 AM", name: "Mobility Flow", coach: "Hina Malik", program: "Mobility" },
-      { time: "11:00 AM", name: "Zone 2 Cardio", coach: "Ayesha Siddiqui", program: "Cardio" },
-    ],
+    step: "03",
+    title: "Collect without the awkwardness",
+    body: "Reminders and payment links go out over WhatsApp. Nobody gets asked about money in front of other people at the front desk.",
   },
 ];
 
-export const WEEKLY_CLASS_COUNT = SCHEDULE.reduce((sum, day) => sum + day.slots.length, 0);
+/* ----------------------------------------------------------------- Pricing */
 
-export const STATS: Stat[] = [
-  { value: "500+", label: "Active members" },
-  { value: String(WEEKLY_CLASS_COUNT), label: "Classes a week" },
-  { value: String(TRAINERS.length), label: "Expert coaches" },
-  { value: "18h", label: "Open daily" },
-];
-
-export interface MembershipTier {
-  plan: Plan;
+export interface Tier {
+  id: string;
   name: string;
-  price: number;
-  months: number;
-  perMonth: number;
-  savingsPercent: number;
+  /** Monthly price in PKR, billed monthly. */
+  monthly: number;
+  memberCap: string;
+  blurb: string;
   featured: boolean;
   perks: string[];
 }
 
-const MONTHLY_RATE = PLAN_FEES.Monthly;
-
-function tier(plan: Plan, name: string, perks: string[], featured = false): MembershipTier {
-  const months = PLAN_MONTHS[plan];
-  const price = PLAN_FEES[plan];
-  const undiscounted = MONTHLY_RATE * months;
-  return {
-    plan,
-    name,
-    price,
-    months,
-    perMonth: Math.round(price / months),
-    savingsPercent: Math.round(((undiscounted - price) / undiscounted) * 100),
-    featured,
-    perks,
-  };
-}
-
-export const MEMBERSHIP_TIERS: MembershipTier[] = [
-  tier("Monthly", "Starter", [
-    "Full gym floor access",
-    "All group classes",
-    "Locker room and showers",
-    "Induction session with a coach",
-  ]),
-  tier("3 Months", "Committed", [
-    "Everything in Starter",
-    "Monthly body composition check",
-    "Personalised training block",
-    "Guest pass each month",
-  ]),
-  tier("6 Months", "Athlete", [
-    "Everything in Committed",
-    "Two personal training sessions",
-    "Nutrition consultation",
-    "Priority class booking",
-  ], true),
-  tier("Yearly", "Iron", [
-    "Everything in Athlete",
-    "Six personal training sessions",
-    "Free kit bag and shaker",
-    "Two membership freezes a year",
-  ]),
+export const TIERS: Tier[] = [
+  {
+    id: "starter",
+    name: "Starter",
+    monthly: 2500,
+    memberCap: "Up to 100 members",
+    blurb: "For a single floor finding its feet.",
+    featured: false,
+    perks: [
+      "Member directory and expiry tracking",
+      "Cash and bank payment records",
+      "Pre-filled WhatsApp reminders",
+      "Monthly revenue reports",
+      "One staff login",
+    ],
+  },
+  {
+    id: "growth",
+    name: "Growth",
+    monthly: 5000,
+    memberCap: "Up to 400 members",
+    blurb: "For a busy gym that has outgrown the register.",
+    featured: true,
+    perks: [
+      "Everything in Starter",
+      "Automated WhatsApp Business API sending",
+      "JazzCash payment links and checkout",
+      "Equipment inventory and maintenance log",
+      "Five staff logins",
+    ],
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    monthly: 9000,
+    memberCap: "Unlimited members",
+    blurb: "For multi-branch operators.",
+    featured: false,
+    perks: [
+      "Everything in Growth",
+      "Multiple branches under one account",
+      "Per-branch reporting and revenue split",
+      "Spreadsheet import and data export",
+      "Unlimited staff logins with roles",
+    ],
+  },
 ];
 
-export interface Facility {
+/** Annual billing gives two months free — stated once, computed everywhere. */
+export const ANNUAL_FREE_MONTHS = 2;
+
+export function annualPrice(tier: Tier): number {
+  return tier.monthly * (12 - ANNUAL_FREE_MONTHS);
+}
+
+export function annualSavingsPercent(): number {
+  return Math.round((ANNUAL_FREE_MONTHS / 12) * 100);
+}
+
+/* -------------------------------------------------------------- Assurances */
+
+export interface Assurance {
   icon: LucideIcon;
   label: string;
 }
 
-export const FACILITIES: Facility[] = [
-  { icon: ShowerHead, label: "Hot showers & changing rooms" },
-  { icon: Lock, label: "Secure member lockers" },
-  { icon: Snowflake, label: "Fully air-conditioned floor" },
-  { icon: ParkingCircle, label: "Free on-site parking" },
-  { icon: Wifi, label: "High-speed Wi-Fi" },
-  { icon: CupSoda, label: "Protein & smoothie bar" },
+export const ASSURANCES: Assurance[] = [
+  { icon: ShieldCheck, label: "No setup fee, cancel any month" },
+  { icon: Database, label: "Export your data whenever you want" },
+  { icon: Smartphone, label: "Works on any phone — no app to install" },
+  { icon: MessageCircle, label: "Support in Urdu and English" },
 ];
+
+/* ------------------------------------------------------------ Testimonials */
 
 export interface Testimonial {
   quote: string;
@@ -327,26 +295,28 @@ export interface Testimonial {
 export const TESTIMONIALS: Testimonial[] = [
   {
     quote:
-      "I came in barely able to deadlift the bar. Fourteen months later I pulled 140 kg. The coaches actually watch your sets and fix what needs fixing.",
-    name: "Hassan Raza",
-    detail: "Member since 2024 · Strength",
-    initials: "HR",
+      "I was chasing renewals from a notebook and losing maybe fifteen members a month to nothing but forgetfulness. The reminders alone paid for it in the first week.",
+    name: "Bilal Ahmed",
+    detail: "Owner, Iron Peak Fitness · Lahore",
+    initials: "BA",
   },
   {
     quote:
-      "The 6 AM HIIT class is the only reason I get up. It is busy, it is loud, and everyone there knows my name.",
-    name: "Fatima Noor",
-    detail: "Member since 2025 · HIIT",
-    initials: "FN",
+      "My front desk staff learnt it in an afternoon. No training, no manual. They already knew how to send a WhatsApp.",
+    name: "Ayesha Siddiqui",
+    detail: "Owner, Core Strength Studio · Karachi",
+    initials: "AS",
   },
   {
     quote:
-      "Clean floor, working equipment, no waiting for a rack at peak hour. After three other gyms in Lahore, that is worth the fee on its own.",
-    name: "Usman Ali",
-    detail: "Member since 2024 · Functional",
-    initials: "UA",
+      "The JazzCash links changed how the first week of the month goes. Members pay from home instead of promising to bring cash tomorrow.",
+    name: "Usman Tariq",
+    detail: "Owner, Peak Athletics · Islamabad",
+    initials: "UT",
   },
 ];
+
+/* --------------------------------------------------------------------- FAQ */
 
 export interface Faq {
   question: string;
@@ -355,28 +325,33 @@ export interface Faq {
 
 export const FAQS: Faq[] = [
   {
-    question: "Can I try the gym before I join?",
+    question: "Do I need a WhatsApp Business API account?",
     answer:
-      "Yes. Your first session is free, including any group class on the schedule. Bring trainers and a water bottle, and arrive ten minutes early so a coach can run you through the floor.",
+      "No. Without one, every reminder still opens WhatsApp with the message written out and addressed to the right member — you just press send. Connect an API account later and the same messages start sending themselves.",
   },
   {
-    question: "Do I need to book classes in advance?",
+    question: "What if my members only pay cash?",
     answer:
-      "Classes are first come, first served for most members, and Athlete and Iron memberships get priority booking. Peak evening slots fill up, so booking the day before is sensible.",
+      "Then nothing changes about how you collect. Cash is a first-class payment method, recorded in two taps. JazzCash and card links are there if you want them, never required.",
   },
   {
-    question: "What if I am completely new to training?",
+    question: "Can I move my existing members across?",
     answer:
-      "Every membership starts with an induction session. A coach walks you through the equipment, takes your baseline numbers and writes a first four-week plan.",
+      "Yes. Add them by hand, or send us your spreadsheet and we will import it for you. Import and export are included on Pro and available on request for every plan.",
   },
   {
-    question: "How do I pay?",
+    question: "Does it work on a phone?",
     answer:
-      "Cash at reception, bank transfer, or JazzCash — including a payment link we can send straight to your WhatsApp. Renewal reminders go out a week before your membership expires.",
+      "GymBook is built mobile-first — most owners run the whole thing from their phone at the front desk. There is no app to install; it runs in the browser.",
   },
   {
-    question: "Can I freeze my membership?",
+    question: "What happens if I stop paying?",
     answer:
-      "Six-month and yearly memberships include freezes for travel, illness or injury. Let reception know before the freeze starts and we adjust your expiry date.",
+      "Your account becomes read-only rather than disappearing, and you can export everything you have put in. We do not hold your member list hostage.",
+  },
+  {
+    question: "Is there a contract?",
+    answer:
+      "No. Monthly plans cancel at the end of the month you are in. Annual billing saves two months and is refunded pro-rata if you leave early.",
   },
 ];
