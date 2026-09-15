@@ -25,8 +25,8 @@ export function StatStrip() {
 
 /** Closing call to action, reused at the bottom of every marketing page. */
 export function CtaBanner({
-  title = "Your first session is on us",
-  description = "Walk in, train with a coach, use the whole floor. No card, no contract, no pressure — just come and see whether this is your gym.",
+  title = "Try it on your own members",
+  description = "Fourteen days, your real member list, no card. If it does not save you the front-desk headache, walk away and take your data with you.",
 }: {
   title?: string;
   description?: string;
@@ -42,11 +42,11 @@ export function CtaBanner({
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/contact" className="gym-btn gym-btn-primary px-6 py-3.5 text-sm">
-              Book Your Free Session
+              Start Free Trial
               <ArrowRight size={17} strokeWidth={2.5} />
             </Link>
             <Link href="/pricing" className="gym-btn gym-btn-ghost px-6 py-3.5 text-sm">
-              See Membership Plans
+              See Pricing
             </Link>
           </div>
         </div>

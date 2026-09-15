@@ -69,11 +69,33 @@
   color: var(--gym-accent);
 }
 
+/*
+ * Marketing headline numbers — the condensed face is the brand voice here.
+ */
 .gym-stat {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Dashboard data figures.
+ *
+ * Deliberately Inter, not the condensed display face: these are values a gym
+ * owner reads for precision, and proportional figures keep a number like 121
+ * from looking loose at display sizes. `tabular-nums` is reserved for columns
+ * that must align vertically (table rows, axis ticks) via .gym-tabular.
+ */
+.gym-figure {
+  font-family: var(--font-gym);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.gym-tabular {
   font-variant-numeric: tabular-nums;
 }
 
