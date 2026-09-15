@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, Database, LogOut, MessageSquare, RotateCcw } from "lucide-react";
+import { Bell, Database, LogOut, MessageSquare, Plug, RotateCcw } from "lucide-react";
 import { useGym } from "@/lib/store";
 import { PLAN_FEES, PLANS, formatCurrency } from "@/lib/utils";
 import { useToast } from "@/components/ui/Toast";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { IntegrationsPanel } from "@/components/IntegrationsPanel";
 
 export default function SettingsPage() {
   const { state, updateSettings, resetDemoData } = useGym();
@@ -68,7 +69,13 @@ export default function SettingsPage() {
               className={`${inputClass} resize-none`}
             />
           </Field>
-          <p className="text-xs text-[var(--gym-text-muted)]">Use {"{name}"} and {"{date}"} as placeholders.</p>
+          <p className="text-xs text-[var(--gym-text-muted)]">
+            Placeholders: {"{name}"}, {"{firstName}"}, {"{gym}"}, {"{date}"}, {"{amount}"}, {"{plan}"}, {"{link}"}.
+          </p>
+        </Section>
+
+        <Section title="Integrations" icon={Plug}>
+          <IntegrationsPanel />
         </Section>
 
         <Section title="Notification Settings" icon={Bell}>

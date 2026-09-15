@@ -1,12 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { PartyPopper } from "lucide-react";
+import { Loader2, PartyPopper, Send } from "lucide-react";
 import { useGym } from "@/lib/store";
-import { daysUntil, formatCurrency } from "@/lib/utils";
+import { daysUntil, formatCurrency, formatDate } from "@/lib/utils";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ReminderSheet } from "@/components/ReminderSheet";
+import { useToast } from "@/components/ui/Toast";
+import { fetchIntegrationStatus, type IntegrationStatus } from "@/lib/client/messaging";
+import type { SendMessageResult } from "@/lib/whatsapp/types";
 import type { Member } from "@/lib/types";
 
 const TABS = [
@@ -25,9 +28,22 @@ function groupLabel(days: number): string {
 }
 
 export default function ExpiringSoonPage() {
-  const { state } = useGym();
+  const { state, addActivity } = useGym();
+  const { showToast } = useToast();
   const [tab, setTab] = useState<TabKey>("7");
   const [reminderMember, setReminderMember] = useState<Member | null>(null);
+  const [integrations, setIntegrations] = useState<IntegrationStatus | null>(null);
+  const [bulkBusy, setBulkBusy] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    fetchIntegrationStatus().then((s) => {
+      if (alive) setIntegrations(s);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const maxDays = TABS.find((t) => t.key === tab)!.max;
 
@@ -46,9 +62,71 @@ export default function ExpiringSoonPage() {
     return Array.from(map.entries()).sort((a, b) => a[0] - b[0]);
   }, [state.members, maxDays]);
 
+  const inWindow = useMemo(() => grouped.flatMap(([, members]) => members), [grouped]);
+  const canBulkSend = integrations?.whatsApp.configured ?? false;
+
+  /**
+   * The money-maker from the spec: one tap reminds everyone whose membership
+   * is about to lapse. Only offered when a WhatsApp API is configured — with
+   * wa.me links this would mean opening one tab per member, which is worse
+   * than doing it by hand.
+   */
+  const remindEveryone = async () => {
+    if (inWindow.length === 0) return;
+    setBulkBusy(true);
+    try {
+      const response = await fetch("/api/whatsapp/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: inWindow.map((member) => ({
+            to: member.phone,
+            kind: "expiry_warning",
+            reference: member.id,
+            params: {
+              memberName: member.name,
+              gymName: state.settings.gymName,
+              expiryDate: formatDate(member.expiryDate),
+              amount: formatCurrency(member.fee),
+              plan: member.plan,
+            },
+          })),
+        }),
+      });
+      const body = (await response.json()) as { sent?: number; failed?: number; results?: SendMessageResult[]; error?: string };
+
+      if (body.error) {
+        showToast(body.error, "error");
+        return;
+      }
+      const sent = body.sent ?? 0;
+      addActivity(`Reminded ${sent} member${sent === 1 ? "" : "s"} about expiring memberships`, "reminder");
+      showToast(
+        body.failed ? `${sent} reminders sent, ${body.failed} failed.` : `${sent} reminder${sent === 1 ? "" : "s"} sent.`,
+        body.failed ? "error" : "success"
+      );
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "Could not send reminders.", "error");
+    } finally {
+      setBulkBusy(false);
+    }
+  };
+
   return (
     <div className="px-4 pt-5 md:px-8 md:pt-6">
-      <h1 className="mb-4 text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">Expiring Soon</h1>
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">Expiring Soon</h1>
+        {canBulkSend && inWindow.length > 0 && (
+          <button
+            onClick={remindEveryone}
+            disabled={bulkBusy}
+            className="flex shrink-0 items-center gap-2 rounded-xl bg-[var(--gym-accent)] px-3.5 py-2 text-xs font-bold text-black transition active:scale-[0.98] disabled:opacity-50"
+          >
+            {bulkBusy ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+            Remind all {inWindow.length}
+          </button>
+        )}
+      </div>
 
       <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
         {TABS.map((t) => (

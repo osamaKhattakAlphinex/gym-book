@@ -3,11 +3,13 @@
 import { Suspense, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle2, Search } from "lucide-react";
+import { CheckCircle2, Search, Wallet } from "lucide-react";
 import { useGym } from "@/lib/store";
 import { formatCurrency, formatDate, initials } from "@/lib/utils";
 import { useToast } from "@/components/ui/Toast";
 import type { Member, PaymentMethod } from "@/lib/types";
+import { PAYMENT_METHODS } from "@/lib/types";
+import { JazzCashSheet } from "@/components/JazzCashSheet";
 
 function RecordPaymentInner() {
   const { state, recordPayment } = useGym();
@@ -21,6 +23,7 @@ function RecordPaymentInner() {
   const [amount, setAmount] = useState(preselected ? preselected.fee - preselected.amountPaid || preselected.fee : 0);
   const [method, setMethod] = useState<PaymentMethod>("Cash");
   const [done, setDone] = useState(false);
+  const [jazzCashOpen, setJazzCashOpen] = useState(false);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -136,12 +139,12 @@ function RecordPaymentInner() {
               </label>
               <div className="mt-4">
                 <span className="mb-1.5 block text-xs font-semibold text-[var(--gym-text)]">Payment Method</span>
-                <div className="flex gap-2">
-                  {(["Cash", "Bank Transfer", "Other"] as PaymentMethod[]).map((m) => (
+                <div className="grid grid-cols-3 gap-2">
+                  {PAYMENT_METHODS.map((m) => (
                     <button
                       key={m}
                       onClick={() => setMethod(m)}
-                      className={`flex-1 rounded-xl border py-2.5 text-xs font-semibold transition ${
+                      className={`rounded-xl border py-2.5 text-xs font-semibold transition ${
                         method === m ? "border-[var(--gym-accent)] bg-[var(--gym-accent)]/10 text-[var(--gym-accent)]" : "border-[var(--gym-border)] text-[var(--gym-text-muted)]"
                       }`}
                     >
@@ -149,6 +152,9 @@ function RecordPaymentInner() {
                     </button>
                   ))}
                 </div>
+                <p className="mt-2 text-xs text-[var(--gym-text-muted)]">
+                  Recording a payment the member already made. To take the money now, use Collect with JazzCash below.
+                </p>
               </div>
             </section>
 
@@ -164,6 +170,28 @@ function RecordPaymentInner() {
               <CheckCircle2 size={18} />
               Record Payment
             </button>
+
+            <button
+              onClick={() => setJazzCashOpen(true)}
+              disabled={amount <= 0}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gym-border)] bg-[var(--gym-surface-2)] py-3.5 text-sm font-bold text-[var(--gym-text)] transition active:scale-[0.98] disabled:opacity-40"
+            >
+              <Wallet size={18} />
+              Collect with JazzCash
+            </button>
+
+            <JazzCashSheet
+              key={`jc-${member.id}`}
+              member={member}
+              amount={amount}
+              open={jazzCashOpen}
+              onClose={() => setJazzCashOpen(false)}
+              onPaid={(paid, paidMethod) => {
+                recordPayment(member.id, paid, paidMethod);
+                setMethod(paidMethod);
+                setDone(true);
+              }}
+            />
           </>
         )}
       </div>

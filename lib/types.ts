@@ -2,7 +2,13 @@ export type Gender = "Male" | "Female" | "Other";
 
 export type Plan = "Monthly" | "3 Months" | "6 Months" | "Yearly";
 
-export type PaymentMethod = "Cash" | "Bank Transfer" | "Other";
+/**
+ * Cash stays first — the spec is explicit that cash still dominates and digital
+ * must never be a requirement. The digital rails are additive.
+ */
+export type PaymentMethod = "Cash" | "JazzCash" | "Easypaisa" | "Raast" | "Bank Transfer" | "Other";
+
+export const PAYMENT_METHODS: PaymentMethod[] = ["Cash", "JazzCash", "Easypaisa", "Raast", "Bank Transfer", "Other"];
 
 export type PaymentStatus = "Paid" | "Partial" | "Pending";
 
