@@ -66,7 +66,7 @@ export default function RenewMembershipPage() {
 
   return (
     <div className="px-4 pb-10 pt-5 md:px-8 md:pt-6">
-      <h1 className="text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">{member.name}</h1>
+      <h1 className="gym-display text-3xl text-[var(--gym-text)]">{member.name}</h1>
       <p className="mt-1 text-sm text-[var(--gym-text-muted)]">
         Current membership expires: <span className="font-semibold text-[var(--gym-text)]">{formatDate(member.expiryDate)}</span>
       </p>

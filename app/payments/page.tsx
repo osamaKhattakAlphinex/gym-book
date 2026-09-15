@@ -67,7 +67,7 @@ function PaymentsInner() {
   return (
     <div className="px-4 pt-5 md:px-8 md:pt-6">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">Payments</h1>
+        <h1 className="gym-display text-3xl text-[var(--gym-text)]">Payments</h1>
         <Link
           href="/payments/new"
           className="hidden items-center gap-1.5 rounded-xl bg-[var(--gym-accent)] px-3.5 py-2 text-xs font-bold text-black md:flex"

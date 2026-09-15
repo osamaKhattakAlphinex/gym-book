@@ -10,7 +10,7 @@ export function TopBar() {
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between border-b border-[var(--gym-border)] bg-[var(--gym-bg)]/95 px-4 py-3 backdrop-blur md:hidden">
-      <Link href="/" className="flex items-center gap-2">
+      <Link href="/dashboard" className="flex items-center gap-2">
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--gym-accent)] text-black">
           <Dumbbell size={16} strokeWidth={2.5} />
         </span>

@@ -29,7 +29,7 @@ export default function NotificationsPage() {
   return (
     <div className="px-4 pb-10 pt-5 md:px-8 md:pt-6">
       <div className="mb-5 flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">Notifications</h1>
+        <h1 className="gym-display text-3xl text-[var(--gym-text)]">Notifications</h1>
         {unreadCount > 0 && (
           <button onClick={markAllNotificationsRead} className="text-xs font-semibold text-[var(--gym-accent)]">
             Mark all as read

@@ -4,7 +4,8 @@ A mobile-first gym membership and subscription management prototype, built for a
 
 ## What it does
 
-- **Dashboard** — active/expiring/expired counts, today's collections, an expiring-membership alert list, quick actions, recent activity, and a membership overview bar.
+- **Public marketing site** (`/`) — a hero, program grid, weekly class timetable, coach profiles, membership pricing with a feature comparison, testimonials, an FAQ and a free-trial enquiry form that opens WhatsApp pre-filled. Pages: `/programs`, `/schedule`, `/trainers`, `/pricing`, `/contact`.
+- **Dashboard** (`/dashboard`) — active/expiring/expired counts, today's collections, an expiring-membership alert list, quick actions, recent activity, and a membership overview bar.
 - **Members** — searchable/filterable directory, member detail with a countdown progress bar and payment history, add/edit/delete.
 - **Renewals & Payments** — fast renew and record-payment flows that update expiry dates, payment history, and dashboard counts immediately.
 - **Expiring Soon** — Today / 3 / 7 / 30-day tabs grouped by urgency, with a WhatsApp / SMS / Call reminder sheet and an editable pre-written message.
@@ -16,7 +17,11 @@ Status logic: **Active** (>7 days to expiry), **Expiring Soon** (0–7 days), **
 
 ## Design
 
-Dark charcoal foundation with an electric lime accent, bold typography, bordered cards, no gradients or glassmorphism — built to read as a real gym operations tool rather than a generic AI dashboard. Bottom navigation + a floating Add Member action on mobile, a sidebar on desktop, same visual language on both.
+Dark charcoal foundation with an electric lime accent, condensed uppercase display type (Oswald) over Inter body text, bordered cards and athletic textures — diagonal bar-tape stripes, a faint mat grid, and an overhead spotlight wash on heroes. No glassmorphism, and colour is never the only signal: statuses carry text, and the comparison table marks inclusion with icons plus screen-reader text.
+
+The public site and the owner's dashboard share one set of tokens and utility classes in `app/globals.css`, so both read as the same gym. The dashboard keeps bottom navigation + a floating Add Member action on mobile and a sidebar on desktop; `AppChrome` keeps that chrome off the marketing pages and off the member-facing payment routes.
+
+The marketing numbers are derived rather than typed: the weekly class count comes from the timetable, the coach count from the team list, and every quoted price from `PLAN_FEES` — the same constants the dashboard bills from.
 
 ## Payments & messaging
 
@@ -36,7 +41,7 @@ JazzCash transactions are the exception: callbacks arrive from JazzCash's server
 
 ## Stack
 
-Next.js (App Router) · React 19 · TypeScript · Tailwind CSS v4 · lucide-react · JazzCash · WhatsApp Cloud API / Twilio
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · lucide-react · JazzCash · WhatsApp Cloud API / Twilio
 
 ## Getting started
 

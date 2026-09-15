@@ -2,16 +2,26 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, Users, Clock, CreditCard, Wrench, BarChart3, Settings, Plus, Dumbbell } from "lucide-react";
+import {
+  Activity,
+  Users,
+  CalendarClock,
+  Wallet,
+  Dumbbell,
+  ChartNoAxesColumn,
+  Settings,
+  Plus,
+  Globe,
+} from "lucide-react";
 import { useGym } from "@/lib/store";
 
 const ITEMS = [
-  { href: "/", label: "Dashboard", icon: LayoutGrid, match: (p: string) => p === "/" },
+  { href: "/dashboard", label: "Dashboard", icon: Activity, match: (p: string) => p === "/dashboard" },
   { href: "/members", label: "Members", icon: Users, match: (p: string) => p.startsWith("/members") },
-  { href: "/expiring", label: "Expiring Soon", icon: Clock, match: (p: string) => p.startsWith("/expiring") },
-  { href: "/payments", label: "Payments", icon: CreditCard, match: (p: string) => p.startsWith("/payments") },
-  { href: "/inventory", label: "Inventory", icon: Wrench, match: (p: string) => p.startsWith("/inventory") },
-  { href: "/reports", label: "Reports", icon: BarChart3, match: (p: string) => p.startsWith("/reports") },
+  { href: "/expiring", label: "Expiring Soon", icon: CalendarClock, match: (p: string) => p.startsWith("/expiring") },
+  { href: "/payments", label: "Payments", icon: Wallet, match: (p: string) => p.startsWith("/payments") },
+  { href: "/inventory", label: "Inventory", icon: Dumbbell, match: (p: string) => p.startsWith("/inventory") },
+  { href: "/reports", label: "Reports", icon: ChartNoAxesColumn, match: (p: string) => p.startsWith("/reports") },
   { href: "/settings", label: "Settings", icon: Settings, match: (p: string) => p.startsWith("/settings") },
 ];
 
@@ -25,13 +35,10 @@ export function Sidebar() {
         <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--gym-accent)] text-black">
           <Dumbbell size={18} strokeWidth={2.5} />
         </span>
-        <span className="text-lg font-extrabold tracking-tight text-[var(--gym-text)]">{state.settings.gymName}</span>
+        <span className="gym-display text-lg text-[var(--gym-text)]">{state.settings.gymName}</span>
       </div>
 
-      <Link
-        href="/members/new"
-        className="mx-4 mb-5 flex items-center justify-center gap-2 rounded-xl bg-[var(--gym-accent)] py-2.5 text-sm font-bold text-black transition active:scale-[0.98]"
-      >
+      <Link href="/members/new" className="gym-btn gym-btn-primary mx-4 mb-5 py-2.5 text-sm">
         <Plus size={17} strokeWidth={2.5} />
         Add Member
       </Link>
@@ -44,18 +51,29 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+              className={`relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
                 active
                   ? "bg-[var(--gym-accent)]/12 text-[var(--gym-accent)]"
                   : "text-[var(--gym-text-muted)] hover:bg-[var(--gym-surface-2)] hover:text-[var(--gym-text)]"
               }`}
             >
-              <Icon size={18} />
+              {active && <span className="absolute inset-y-1.5 left-0 w-[3px] rounded-full bg-[var(--gym-accent)]" aria-hidden />}
+              <Icon size={18} strokeWidth={active ? 2.5 : 2} />
               {item.label}
             </Link>
           );
         })}
       </nav>
+
+      <div className="border-t border-[var(--gym-border)] px-3 py-3">
+        <Link
+          href="/"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[var(--gym-text-muted)] transition hover:bg-[var(--gym-surface-2)] hover:text-[var(--gym-text)]"
+        >
+          <Globe size={18} />
+          View public site
+        </Link>
+      </div>
 
       <div className="border-t border-[var(--gym-border)] px-6 py-4">
         <p className="text-xs font-semibold text-[var(--gym-text)]">{state.settings.ownerName}</p>

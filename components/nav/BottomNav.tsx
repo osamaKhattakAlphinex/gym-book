@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, Users, CreditCard, Menu, Plus } from "lucide-react";
+import { Activity, Users, Wallet, Menu, Plus } from "lucide-react";
 
 const ITEMS = [
-  { href: "/", label: "Dashboard", icon: LayoutGrid, match: (p: string) => p === "/" },
+  { href: "/dashboard", label: "Dashboard", icon: Activity, match: (p: string) => p === "/dashboard" },
   { href: "/members", label: "Members", icon: Users, match: (p: string) => p.startsWith("/members") },
 ];
 
 const RIGHT_ITEMS = [
-  { href: "/payments", label: "Payments", icon: CreditCard, match: (p: string) => p.startsWith("/payments") },
+  { href: "/payments", label: "Payments", icon: Wallet, match: (p: string) => p.startsWith("/payments") },
   {
     href: "/more",
     label: "More",

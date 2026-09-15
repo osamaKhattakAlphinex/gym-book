@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { BarChart3, Bell, Clock, Settings, ChevronRight, Dumbbell, Wrench } from "lucide-react";
+import { ChartNoAxesColumn, Bell, CalendarClock, Settings, ChevronRight, Dumbbell, Globe } from "lucide-react";
 import { useGym, useInventoryStats } from "@/lib/store";
 
 const ITEMS = [
-  { href: "/expiring", label: "Expiring Soon", icon: Clock, tone: "warning" as const },
-  { href: "/inventory", label: "Inventory", icon: Wrench, tone: "warning" as const },
-  { href: "/reports", label: "Reports", icon: BarChart3, tone: "accent" as const },
+  { href: "/expiring", label: "Expiring Soon", icon: CalendarClock, tone: "warning" as const },
+  { href: "/inventory", label: "Inventory", icon: Dumbbell, tone: "warning" as const },
+  { href: "/reports", label: "Reports", icon: ChartNoAxesColumn, tone: "accent" as const },
   { href: "/notifications", label: "Notifications", icon: Bell, tone: "success" as const },
   { href: "/settings", label: "Settings", icon: Settings, tone: "default" as const },
+  { href: "/", label: "View public site", icon: Globe, tone: "default" as const },
 ];
 
 export default function MorePage() {
@@ -20,7 +21,7 @@ export default function MorePage() {
 
   return (
     <div className="px-4 pt-5 md:hidden">
-      <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">More</h1>
+      <h1 className="gym-display mb-1 text-3xl text-[var(--gym-text)]">More</h1>
       <p className="mb-6 text-sm text-[var(--gym-text-muted)]">Everything else you need to run the gym.</p>
 
       <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[var(--gym-border)] bg-[var(--gym-surface)] p-4">
@@ -28,7 +29,7 @@ export default function MorePage() {
           <Dumbbell size={20} strokeWidth={2.5} />
         </span>
         <div>
-          <p className="font-bold text-[var(--gym-text)]">{state.settings.gymName}</p>
+          <p className="gym-display text-base text-[var(--gym-text)]">{state.settings.gymName}</p>
           <p className="text-xs text-[var(--gym-text-muted)]">{state.settings.ownerName} &middot; Gym Owner</p>
         </div>
       </div>

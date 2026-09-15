@@ -46,7 +46,7 @@ export default function ReportsPage() {
 
   return (
     <div className="px-4 pb-10 pt-5 md:px-8 md:pt-6">
-      <h1 className="mb-6 text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">Reports</h1>
+      <h1 className="gym-display mb-6 text-3xl text-[var(--gym-text)]">Reports</h1>
 
       <section className="mb-6">
         <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-[var(--gym-text-muted)]">Membership Statistics</h2>

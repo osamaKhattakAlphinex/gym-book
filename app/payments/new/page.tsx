@@ -66,7 +66,7 @@ function RecordPaymentInner() {
 
   return (
     <div className="px-4 pb-10 pt-5 md:px-8 md:pt-6">
-      <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">Record Payment</h1>
+      <h1 className="gym-display mb-1 text-3xl text-[var(--gym-text)]">Record Payment</h1>
       <p className="mb-6 text-sm text-[var(--gym-text-muted)]">Select a member to record their payment.</p>
 
       <div className="mx-auto max-w-xl space-y-5">
