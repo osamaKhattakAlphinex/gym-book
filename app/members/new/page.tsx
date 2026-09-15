@@ -65,7 +65,7 @@ export default function AddMemberPage() {
 
   return (
     <div className="px-4 pb-10 pt-5 md:px-8 md:pt-6">
-      <h1 className="mb-1 text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">Add Member</h1>
+      <h1 className="gym-display mb-1 text-3xl text-[var(--gym-text)]">Add Member</h1>
       <p className="mb-6 text-sm text-[var(--gym-text-muted)]">Fill in the details to register a new member.</p>
 
       <div className="mx-auto max-w-xl space-y-6">

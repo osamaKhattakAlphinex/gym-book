@@ -50,7 +50,7 @@ function MembersInner() {
 
   return (
     <div className="px-4 pt-5 md:px-8 md:pt-6">
-      <h1 className="mb-4 text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">Members</h1>
+      <h1 className="gym-display mb-4 text-3xl text-[var(--gym-text)]">Members</h1>
 
       <div className="relative mb-3">
         <Search size={17} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--gym-text-muted)]" />

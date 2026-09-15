@@ -1,19 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --gym-bg: #0a0b0c;
-  --gym-surface: #151719;
-  --gym-surface-2: #1e2124;
+  /* Foundation — charcoal, deepened so the accent carries more punch */
+  --gym-bg: #08090b;
+  --gym-surface: #131518;
+  --gym-surface-2: #1c1f23;
+  --gym-surface-3: #24282d;
   --gym-border: #2a2d31;
+  --gym-border-strong: #3a3f46;
+
+  /* Type */
   --gym-text: #f5f6f7;
   --gym-text-muted: #9aa0a6;
+  --gym-text-dim: #6c7278;
+
+  /* Electric lime */
   --gym-accent: #c6ff33;
   --gym-accent-strong: #aee020;
+  --gym-accent-dim: #85a819;
+
+  /* Status — color is always paired with text, never used alone */
   --gym-success: #34d399;
   --gym-warning: #f5a623;
   --gym-danger: #ef4444;
 
   --font-gym: "Inter", "Segoe UI", sans-serif;
+  --font-display: "Oswald", "Inter", "Segoe UI", sans-serif;
 }
 
 .gym-app {
@@ -32,6 +44,141 @@
   background: var(--gym-accent);
   color: #000;
 }
+
+/* ---------------------------------------------------------------- Typography */
+
+/*
+ * Condensed uppercase display type is what makes this read as a gym rather
+ * than a generic admin panel. Oswald is narrow enough that long headlines
+ * still fit a 360px phone without wrapping awkwardly.
+ */
+.gym-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 0.95;
+}
+
+.gym-eyebrow {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: var(--gym-accent);
+}
+
+.gym-stat {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ Textures */
+
+/* Diagonal bar-tape stripes — used behind heroes and section breaks. */
+.gym-stripes {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgb(198 255 51 / 0.05) 0px,
+    rgb(198 255 51 / 0.05) 2px,
+    transparent 2px,
+    transparent 11px
+  );
+}
+
+/* Faint mat grid. */
+.gym-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.028) 1px, transparent 1px);
+  background-size: 58px 58px;
+}
+
+/* Overhead spotlight wash for hero sections. */
+.gym-spotlight {
+  background:
+    radial-gradient(62% 52% at 50% -4%, rgb(198 255 51 / 0.16), transparent 68%),
+    radial-gradient(42% 42% at 88% 14%, rgb(198 255 51 / 0.07), transparent 72%);
+}
+
+/* Knurled-grip edge, for the left rail of emphasis cards. */
+.gym-knurl {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--gym-accent) 0px,
+    var(--gym-accent) 3px,
+    transparent 3px,
+    transparent 7px
+  );
+}
+
+/* --------------------------------------------------------------- Components */
+
+.gym-card {
+  border: 1px solid var(--gym-border);
+  background: var(--gym-surface);
+  border-radius: 1rem;
+}
+
+.gym-card-hover {
+  transition:
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.gym-card-hover:hover {
+  border-color: var(--gym-border-strong);
+  background: var(--gym-surface-2);
+  transform: translateY(-2px);
+}
+
+/* Primary call to action — lime slab with a hard athletic edge. */
+.gym-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: 0.75rem;
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.gym-btn:active {
+  transform: scale(0.97);
+}
+
+.gym-btn-primary {
+  background: var(--gym-accent);
+  color: #0a0b0c;
+}
+
+.gym-btn-primary:hover {
+  background: var(--gym-accent-strong);
+}
+
+.gym-btn-ghost {
+  border: 1px solid var(--gym-border-strong);
+  color: var(--gym-text);
+}
+
+.gym-btn-ghost:hover {
+  border-color: var(--gym-accent);
+  color: var(--gym-accent);
+}
+
+/* ------------------------------------------------------------------ Motion */
 
 @keyframes gym-toast-in {
   from {
@@ -55,6 +202,17 @@
   }
 }
 
+@keyframes gym-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .animate-toast-in {
   animation: gym-toast-in 0.22s ease-out;
 }
@@ -62,6 +220,30 @@
 .animate-sheet-in {
   animation: gym-sheet-in 0.22s ease-out;
 }
+
+/* Entrance for marketing sections. Pure CSS — no scroll listeners. */
+.gym-rise {
+  animation: gym-rise 0.5s ease-out both;
+}
+
+.gym-rise-1 { animation-delay: 0.06s; }
+.gym-rise-2 { animation-delay: 0.12s; }
+.gym-rise-3 { animation-delay: 0.18s; }
+.gym-rise-4 { animation-delay: 0.24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gym-rise,
+  .animate-toast-in,
+  .animate-sheet-in {
+    animation: none;
+  }
+
+  .gym-card-hover:hover {
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------- Forms */
 
 .gym-app input,
 .gym-app textarea,

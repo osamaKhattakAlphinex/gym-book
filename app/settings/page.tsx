@@ -29,7 +29,7 @@ export default function SettingsPage() {
 
   return (
     <div className="px-4 pb-10 pt-5 md:px-8 md:pt-6">
-      <h1 className="mb-6 text-2xl font-extrabold tracking-tight text-[var(--gym-text)]">Settings</h1>
+      <h1 className="gym-display mb-6 text-3xl text-[var(--gym-text)]">Settings</h1>
 
       <div className="mx-auto max-w-xl space-y-5">
         <Section title="Gym Profile">
